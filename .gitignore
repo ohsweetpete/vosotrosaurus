@@ -1,0 +1,7 @@
+node_modules
+dist
+.DS_Store
+# local single-file copies (the published one is docs/index.html)
+Conjugar*.html
+Vosotrosaurus*.html
+_to_delete/
