@@ -610,12 +610,12 @@ button.select-opt { width: 100%; border: none; background: none; font: inherit; 
   .tabbar {
     position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
     display: grid; grid-template-columns: repeat(4, 1fr);
-    height: calc(60px + var(--safe-b)); padding-bottom: var(--safe-b);
+    height: 56px; padding-bottom: 0;
     background: var(--ground); border-top: 1px solid var(--line-soft);
     box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.04);
   }
   .tabbar a {
-    display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 3px; padding-bottom: 4px;
+    display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 2px; padding-bottom: 7px;
     font-size: 11px; font-weight: 500; color: var(--muted); -webkit-tap-highlight-color: transparent;
   }
   .tabbar a svg { transition: transform 120ms ease; }
@@ -634,11 +634,11 @@ button.select-opt { width: 100%; border: none; background: none; font: inherit; 
   .topbar-search { display: flex; position: absolute; right: 8px; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; align-items: center; justify-content: center; border: none; background: none; color: var(--ink); cursor: pointer; }
   .topbar-search:active { color: var(--accent); }
   /* room to breathe above the tab bar (drill has no tab bar) */
-  .page { padding-bottom: calc(40px + 60px + var(--safe-b)); }
+  .page { padding-bottom: calc(40px + 56px); }
   .app:has(.drill-bar-wrap) .page { padding-bottom: 20px; }
   /* phone: bar sits on the tab bar */
-  .app:has(.setup-aside) .page { padding-bottom: calc(60px + var(--safe-b)); }
-  .setup-aside { bottom: calc(60px + var(--safe-b)); margin: 0 -16px; padding-top: 0; }
+  .app:has(.setup-aside) .page { padding-bottom: 56px; }
+  .setup-aside { bottom: 56px; margin: 0 -16px; padding-top: 0; }
   .setup-bar { padding: 10px 16px 12px; }
   /* phone: picker is a full-screen sheet with the aligned filter grids */
   .sheet-backdrop { padding: 0; background: var(--ground); }
