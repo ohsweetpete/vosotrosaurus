@@ -18,7 +18,7 @@
   --mono: 'IBM Plex Mono', ui-monospace, monospace;
   /* bottom safe area, capped: iOS can report a very large inset when the page runs
      edge to edge; we only need enough to clear the home indicator */
-  --safe-b: min(var(--safe-b), 16px);
+  --safe-b: min(env(safe-area-inset-bottom, 0px), 16px);
 }
 * { box-sizing: border-box; }
 html, body { margin: 0; background: var(--ground); color: var(--ink); font-family: var(--sans); }
