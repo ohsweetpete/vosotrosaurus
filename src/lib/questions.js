@@ -70,8 +70,16 @@ export function makeDrawer(settings) {
   // or only one verb matches). Falls back to the unfiltered list if it would empty it.
   const specific = !!(settings.verbs && settings.verbs.length) || (settings.mode && settings.mode !== 'custom');
   let lastInf = null;
+  let lastSlot = null; // `${tense}|${personIdx}` of the previous question
+  // Never the same tense + person twice running: the ending would just be copied from
+  // the last answer. Falls back to the unfiltered list if it would empty it.
+  const otherSlot = (list) => {
+    if (!lastSlot) return list;
+    const out = list.filter((k) => { const { tense, personIdx } = parseKey(k); return `${tense}|${personIdx}` !== lastSlot; });
+    return out.length ? out : list;
+  };
   const fresh = (list) => {
-    const notRecent = list.filter((k) => !recent.includes(k));
+    const notRecent = otherSlot(list.filter((k) => !recent.includes(k)));
     if (specific || verbs.length < 2 || !lastInf) return notRecent;
     const otherVerb = notRecent.filter((k) => parseKey(k).inf !== lastInf);
     return otherVerb.length ? otherVerb : notRecent;
@@ -84,10 +92,10 @@ export function makeDrawer(settings) {
     const due = fresh(dueAll);
     // 1. Forms you got wrong last time and that are due again come first
     //    (same verb as last question is fine here: it's the one giving trouble).
-    const lapsed = dueAll.filter((k) => {
+    const lapsed = otherSlot(dueAll.filter((k) => {
       const h = srs[k]?.hist ?? [];
       return h.length && h[h.length - 1] === 0;
-    });
+    }));
     let k = null;
     if (lapsed.length) {
       k = lapsed[Math.floor(Math.random() * Math.min(lapsed.length, 3))];
@@ -119,6 +127,7 @@ export function makeDrawer(settings) {
     remember(k);
     const { inf, tense, personIdx } = parseKey(k);
     lastInf = inf;
+    lastSlot = `${tense}|${personIdx}`;
     const e = srs[k];
     return { ...makeQuestion(inf, tense, personIdx), due: !!(e && e.due <= now), isNew: !e };
   };
