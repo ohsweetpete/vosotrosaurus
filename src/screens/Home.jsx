@@ -35,11 +35,11 @@ export default function Home({ settings, setSettings }) {
   const tenseLabel = (id) => TENSES.find((t) => t.id === id)?.label ?? id;
 
   const startReview = () => {
-    setSettings(due ? { ...settings, mode: 'due', length: due > 50 ? 50 : 0 } : { ...settings, mode: 'custom' });
+    setSettings(due ? { ...settings, mode: 'due', length: Math.min(due, 50) } : { ...settings, mode: 'custom' });
     go('drill');
   };
   const startMissed = () => {
-    setSettings({ ...settings, mode: 'mistakes', length: mistakes > 50 ? 50 : 0 });
+    setSettings({ ...settings, mode: 'mistakes', length: Math.min(mistakes, 50) });
     go('drill');
   };
   const startFirst = () => startOneOffDrill({ mode: 'custom' }); // the app defaults, as set up on Practice

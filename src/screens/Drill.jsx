@@ -169,7 +169,7 @@ export default function Drill({ settings, setSettings }) {
     const pct = n ? Math.round((score.ok / n) * 100) : 0;
     const due = settings.mode === 'due' ? 0 : dueKeys().length;
     const again = () => { setN(0); setScore({ ok: 0, bad: 0 }); setMisses([]); setTrail([]); setQ(draw()); setTyped(''); setHint(false); setResult(null); setPhase('ask'); };
-    const review = () => startOneOffDrill({ mode: 'due', length: due > 50 ? 50 : 0 }); // fresh drawer over the due pool
+    const review = () => startOneOffDrill({ mode: 'due', length: Math.min(due, 50) }); // fresh drawer over the due pool
     return (
       <>
         <div className="drill-bar-wrap"><div className="drill-bar">
