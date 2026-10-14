@@ -4,7 +4,7 @@ import { conjugate } from '../lib/conjugate.js';
 import { verbStats, verbLevel, LEVELS } from '../lib/stats.js';
 import { loadSrs, loadBrowse, saveBrowse } from '../lib/store.js';
 import { Form } from './Drill.jsx';
-import { go, useIsMobile } from '../App.jsx';
+import { go, startOneOffDrill, useIsMobile } from '../App.jsx';
 import Dropdown, { usePopover } from '../components/Dropdown.jsx';
 import { example, tenseUsage, contrast, specialNote, tenseLabel } from '../lib/usage.js';
 
@@ -203,10 +203,7 @@ export default function Verbs({ inf: param, settings, setSettings }) {
     if (el && isMobile) el.scrollIntoView({ block: 'center', behavior: 'smooth' });
   }, [sel?.tense, sel?.personIdx, verb.inf]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const drillThis = () => {
-    setSettings({ ...settings, mode: 'custom', verbs: [verb.inf], length: 20 });
-    go('drill');
-  };
+  const drillThis = () => startOneOffDrill({ mode: 'custom', verbs: [verb.inf], length: 20 });
 
   return (
     <div className="verbs-layout">

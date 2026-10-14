@@ -2,7 +2,7 @@ import React from 'react';
 import { TENSES, VERBS } from '../data/verbs.js';
 import { dueKeys, mistakeKeys, loadLog } from '../lib/store.js';
 import { todayStats, streak, byTense, mostMissed } from '../lib/stats.js';
-import { go, Mascot, useIsMobile } from '../App.jsx';
+import { go, startOneOffDrill, Mascot, useIsMobile } from '../App.jsx';
 
 /** One home card. `to` = hash route, or onClick for cards that change settings first. */
 function Card({ eyebrow, title, children, cta, to, onClick, primary, disabled, muted }) {
@@ -42,10 +42,7 @@ export default function Home({ settings, setSettings }) {
     setSettings({ ...settings, mode: 'mistakes', length: mistakes > 50 ? 50 : 0 });
     go('drill');
   };
-  const startFirst = () => {
-    setSettings({ ...settings, mode: 'custom', verbs: [], tenses: ['presente'], tier: 25, length: 10 });
-    go('drill');
-  };
+  const startFirst = () => startOneOffDrill({ mode: 'custom', verbs: [], tenses: ['presente'], tier: 25, length: 10 });
 
   // What the dino says.
   const dayWord = `day ${days}`;

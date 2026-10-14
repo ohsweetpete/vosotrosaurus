@@ -43,6 +43,16 @@ export function go(path) {
   window.location.hash = `#/${path}`;
 }
 
+/**
+ * Start a drill with temporary choices (the first drill, "Drill this verb") without
+ * writing them into the saved setup. Cleared as soon as the user leaves the drill.
+ */
+let oneOff = null;
+export function startOneOffDrill(overrides) {
+  oneOff = overrides;
+  go('drill');
+}
+
 /** Full mascot for the Home page. */
 export function Mascot({ size = 160, tight = false }) {
   // tight: crop to the dino's real bounds (no shadow, no empty margin) for inline/lockup use.
@@ -173,14 +183,22 @@ export default function App() {
   }, [route.path]);
 
   if (route.path === 'drill') {
+    const drillSettings = oneOff ? { ...settings, ...oneOff } : settings;
+    // Prompt-language changes made during a one-off drill still save; its pool choices don't.
+    const setDrillSettings = (next) => {
+      if (!oneOff) return setSettings(next);
+      const { promptLang, showHints, strictAccents } = next;
+      setSettings({ ...settings, promptLang, showHints, strictAccents });
+    };
     return (
       <div className="app">
         <div className="scroller" ref={scrollerRef}>
-          <Drill settings={settings} setSettings={setSettings} />
+          <Drill key={oneOff ? JSON.stringify(oneOff) : 'saved'} settings={drillSettings} setSettings={setDrillSettings} />
         </div>
       </div>
     );
   }
+  oneOff = null;
 
   let screen;
   switch (route.path) {
