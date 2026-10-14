@@ -62,28 +62,9 @@ export default function Drill({ settings, setSettings }) {
   const person = PERSONS[q.personIdx];
 
   useEffect(() => {
-    if (phase === 'ask') inputRef.current?.focus({ preventScroll: true });
+    if (phase === 'ask') inputRef.current?.focus();
   }, [phase, q]);
 
-  // Phones: size the drill to the visible area so the on-screen keyboard shrinks the screen
-  // instead of scrolling the page (which pushed the header off the top on iOS).
-  useEffect(() => {
-    if (!isMobile || !window.visualViewport) return undefined;
-    const vv = window.visualViewport;
-    const root = document.documentElement;
-    const apply = () => {
-      root.style.setProperty('--vvh', `${Math.round(vv.height)}px`);
-      if (vv.offsetTop > 0 || window.scrollY > 0) window.scrollTo(0, 0);
-    };
-    apply();
-    vv.addEventListener('resize', apply);
-    vv.addEventListener('scroll', apply);
-    return () => {
-      vv.removeEventListener('resize', apply);
-      vv.removeEventListener('scroll', apply);
-      root.style.removeProperty('--vvh');
-    };
-  }, [isMobile]);
 
   const check = () => {
     if (!typed.trim()) return;

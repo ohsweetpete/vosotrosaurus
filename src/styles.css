@@ -625,9 +625,6 @@ button.select-opt { width: 100%; border: none; background: none; font: inherit; 
   /* drill has its own header and should feel focused */
   .app:has(.drill-bar-wrap) .tabbar { display: none; }
   .app:has(.drill-bar-wrap) .page { padding-bottom: 20px; }
-  /* keyboard open: the app shrinks to the visible area and the drill scrolls inside it */
-  .app:has(.drill-bar-wrap) { height: var(--vvh, 100dvh); min-height: 0; overflow: hidden; }
-  .app:has(.drill-bar-wrap) .page { flex: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; }
   .cards { grid-template-columns: 1fr; }
   .hero-row { flex-direction: column; align-items: center; }
   .hero h1 { font-size: 32px; }
