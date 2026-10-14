@@ -203,7 +203,7 @@ export default function Drill({ settings, setSettings }) {
             )}
             {due > 0 && <button type="button" className="btn ghost" onClick={again}>Again</button>}
             <a href="#/setup" className="btn ghost">Change setup</a>
-            <a href="#/progress" className="btn ghost">Progress</a>
+            <a href="#/" className="btn ghost">Home</a>
           </div>
         </div>
       </>

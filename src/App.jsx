@@ -71,16 +71,16 @@ export function Mascot({ size = 160, tight = false }) {
 
 const LINKS = [
   ['home', 'Home'],
-  ['setup', 'Practice'],
   ['verbs', 'Verbs'],
+  ['setup', 'Practice'],
   ['progress', 'Progress'],
 ];
 
 const ICONS = {
   home: <><path d="M4 11l8-7 8 7v9H4z" /><path d="M10 20v-6h4v6" /></>,
-  setup: <><path d="M15 4l5 5L8 21H3v-5z" /><path d="M13 6l5 5" /></>,
+  setup: <><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="4.5" /><circle cx="12" cy="12" r="0.75" fill="currentColor" /></>,
   verbs: <><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" /><path d="M6.5 3H20v18H6.5A2.5 2.5 0 0 1 4 18.5v-13A2.5 2.5 0 0 1 6.5 3z" /></>,
-  progress: <><path d="M5 20v-8" /><path d="M12 20V5" /><path d="M19 20v-5" /><path d="M3 20h18" /></>,
+  progress: <><path d="M3 17l6-6 4 4 8-8" /><path d="M15 7h6v6" /></>,
 };
 
 function Icon({ name }) {
