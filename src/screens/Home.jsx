@@ -95,23 +95,23 @@ export default function Home({ settings, setSettings }) {
         ) : (
           <Card
             primary
-            eyebrow="Review due"
-            title={due ? `${due} ${due === 1 ? 'form' : 'forms'} to review` : 'Nothing due yet'}
+            eyebrow="Due for review"
+            title={due ? `${due} ${due === 1 ? 'form' : 'forms'} due today` : 'Nothing due yet'}
             cta={due ? 'Start review →' : 'Quick drill →'}
             onClick={startReview}
           >
-            {due ? 'Spaced repetition says these are about to slip.' : 'Do a drill; forms come back tomorrow.'}
+            {due ? 'Forms you already know, scheduled to come back before you forget them.' : 'Do a drill; forms come back tomorrow.'}
           </Card>
         )}
 
         <Card
-          eyebrow="Mistakes · still outstanding"
-          title={mistakes ? `${mistakes} missed ${mistakes === 1 ? 'form' : 'forms'}` : 'No misses outstanding'}
-          cta={mistakes ? 'Re-drill →' : undefined}
+          eyebrow="Mistakes"
+          title={mistakes ? `${mistakes} ${mistakes === 1 ? 'form' : 'forms'} you got wrong` : 'No mistakes to fix'}
+          cta={mistakes ? 'Fix mistakes →' : undefined}
           onClick={startMissed}
           disabled={!mistakes}
         >
-          {mistakes ? missed.map((m) => m.inf).join(', ') : 'Missed forms wait here until you get them right.'}
+          {mistakes ? `Not yet answered correctly: ${missed.map((m) => m.inf).join(', ')}` : 'Anything you miss waits here until you get it right.'}
         </Card>
 
         <Card eyebrow="Practice" title="Set up a drill" cta="Set up →" to="#/setup">
