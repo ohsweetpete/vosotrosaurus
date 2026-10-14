@@ -100,7 +100,7 @@ export default function Home({ settings, setSettings }) {
             cta={due ? 'Start review →' : 'Quick drill →'}
             onClick={startReview}
           >
-            {due ? 'Forms you already know, scheduled to come back before you forget them.' : 'Do a drill; forms come back tomorrow.'}
+            {due ? 'Known forms, scheduled to return before you forget them.' : 'Do a drill; forms come back tomorrow.'}
           </Card>
         )}
 
