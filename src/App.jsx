@@ -165,10 +165,19 @@ export default function App() {
     saveSettings(merged);
   };
 
+  // Phones scroll inside .scroller (the tab bar is a fixed footer of the app box); start each screen at the top.
+  const scrollerRef = useRef(null);
+  useEffect(() => {
+    scrollerRef.current?.scrollTo?.(0, 0);
+    window.scrollTo(0, 0);
+  }, [route.path]);
+
   if (route.path === 'drill') {
     return (
       <div className="app">
-        <Drill settings={settings} setSettings={setSettings} />
+        <div className="scroller" ref={scrollerRef}>
+          <Drill settings={settings} setSettings={setSettings} />
+        </div>
       </div>
     );
   }
@@ -187,13 +196,6 @@ export default function App() {
     default:
       screen = <Home settings={settings} setSettings={setSettings} />;
   }
-
-  // Phones scroll inside .scroller (the tab bar is a fixed footer of the app box); start each screen at the top.
-  const scrollerRef = useRef(null);
-  useEffect(() => {
-    scrollerRef.current?.scrollTo?.(0, 0);
-    window.scrollTo(0, 0);
-  }, [route.path]);
 
   return (
     <div className="app">

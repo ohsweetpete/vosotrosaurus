@@ -583,10 +583,10 @@ button.select-opt { width: 100%; border: none; background: none; font: inherit; 
   .setup-head { flex-direction: column; align-items: center; gap: 4px; }
   .chip-row .chip { padding: 9px 14px; min-height: 40px; }
   .setup .option-row { padding: 12px 0; }
-  .app:has(.setup-aside) .page { padding-bottom: 0; }
   .setup.grid-sidebar { flex: 1; display: flex; flex-direction: column; }
-  .setup-aside { position: sticky; bottom: 0; z-index: 2; margin: auto -16px 0; align-self: stretch; padding-top: 16px; }
-  .setup-bar { border: none; border-top: 1px solid var(--line-soft); background: rgba(255,255,255,0.96); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); padding: 10px 16px 12px; gap: 8px; }
+  /* phone/tablet: length + start is an ordinary last row, not a sticky bar */
+  .setup-aside { position: static; margin: 0; align-self: stretch; padding-top: 0; }
+  .setup-bar { border: none; border-top: 1px dashed var(--line); background: none; padding: 16px 0 0; gap: 10px; }
   .setup-length-row { flex-direction: row; align-items: center; gap: 12px; }
   .setup-length-row .segmented { flex: 1; grid-template-columns: repeat(4, 1fr) !important; }
 }
@@ -642,9 +642,6 @@ button.select-opt { width: 100%; border: none; background: none; font: inherit; 
   .page { padding-bottom: 40px; }
   .app:has(.drill-bar-wrap) .page { padding-bottom: 20px; }
   /* phone: bar sits on the tab bar */
-  .app:has(.setup-aside) .page { padding-bottom: 0; }
-  .setup-aside { bottom: 0; margin: 0 -16px; padding-top: 0; }
-  .setup-bar { padding: 10px 16px 12px; }
   /* phone: picker is a full-screen sheet with the aligned filter grids */
   .sheet-backdrop { padding: 0; background: var(--ground); }
   .sheet-backdrop .sheet { width: 100%; max-height: none; height: 100%; border: none; box-shadow: none; padding: 12px 16px calc(16px + var(--safe-b)); }
