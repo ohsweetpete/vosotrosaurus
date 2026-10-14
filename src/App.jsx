@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Home from './screens/Home.jsx';
 import Setup from './screens/Setup.jsx';
 import Drill from './screens/Drill.jsx';
@@ -188,10 +188,19 @@ export default function App() {
       screen = <Home settings={settings} setSettings={setSettings} />;
   }
 
+  // Phones scroll inside .scroller (the tab bar is a fixed footer of the app box); start each screen at the top.
+  const scrollerRef = useRef(null);
+  useEffect(() => {
+    scrollerRef.current?.scrollTo?.(0, 0);
+    window.scrollTo(0, 0);
+  }, [route.path]);
+
   return (
     <div className="app">
-      <TopBar active={route.path} />
-      <main className="page">{screen}</main>
+      <div className="scroller" ref={scrollerRef}>
+        <TopBar active={route.path} />
+        <main className="page">{screen}</main>
+      </div>
       <BottomNav active={route.path} />
     </div>
   );
