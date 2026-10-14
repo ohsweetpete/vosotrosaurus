@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { VERBS, VERB_BY_INF, PERSONS, TENSES, GROUPS, TIERS, verbTypeLabel, verbGroups } from '../data/verbs.js';
+import { VERBS, VERB_BY_INF, PERSONS, TENSES, GROUPS, TIERS, verbTypeTags, verbGroups } from '../data/verbs.js';
 import { conjugate } from '../lib/conjugate.js';
 import { verbStats, verbLevel, LEVELS } from '../lib/stats.js';
 import { loadSrs, loadBrowse, saveBrowse } from '../lib/store.js';
@@ -235,18 +235,17 @@ export default function Verbs({ inf: param, settings, setSettings }) {
             <div className="verb-en verb-meaning">{verb.en}</div>
             <div className="tags verb-tags">
               <span className="strong">-{verb.group}</span>
-              {verbTypeLabel(verb).split(' · ').map((t) => <span key={t}>{t}</span>)}
-              <span className={`level-tag level-${lvl.level}`}>{LEVELS.find((l) => l.id === lvl.level).label}</span>
+              {verbTypeTags(verb).map((t) => <span key={t}>{t}</span>)}
             </div>
             <div className="muted verb-stats">
               {stats.n ? (
                 <>
-                  <div>{lvl.known}/{lvl.total} forms known · {stats.n} answered · {Math.round(stats.accuracy * 100)}% right</div>
+                  <div><span className={`level-dot level-${lvl.level}`} />{LEVELS.find((l) => l.id === lvl.level).label} · {lvl.known}/{lvl.total} forms known · {stats.n} answered · {Math.round(stats.accuracy * 100)}% right</div>
                   {stats.weakest && (
                     <div>Weakest: {PERSONS[stats.weakest.personIdx]} · {TENSES.find((t) => t.id === stats.weakest.tense)?.label} ({Math.round(stats.weakest.acc * 100)}%)</div>
                   )}
                 </>
-              ) : 'Not practised yet'}
+              ) : <><span className="level-dot level-unseen" />Not practised yet</>}
             </div>
           </div>
         </div>

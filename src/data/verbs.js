@@ -176,6 +176,16 @@ export function verbGroups(v) {
 }
 
 /** Short human label for the verb's type, used as the on-screen hint. */
+/** Short tags for chips: ['e→ie', 'Irregular'] / ['Spelling change'] / ['Regular']. */
+export function verbTypeTags(v) {
+  const parts = [];
+  if (v.stem) parts.push(v.stem.replace('>', '→'));
+  if (v.tags.includes('spell')) parts.push('Spelling change');
+  if (v.tags.includes('irregular')) parts.push('Irregular');
+  if (parts.length === 0) parts.push('Regular');
+  return parts;
+}
+
 export function verbTypeLabel(v) {
   const parts = [];
   if (v.stem) parts.push(`Stem-changer ${v.stem.replace('>', '→')}`);

@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { PERSONS, TENSES, verbTypeLabel } from '../data/verbs.js';
+import { PERSONS, TENSES, verbTypeTags } from '../data/verbs.js';
 import { conjugate, highlight, checkAnswer, ruleNote, stemOf } from '../lib/conjugate.js';
 import { makeDrawer, poolSize } from '../lib/questions.js';
 import { recordAnswer, dueKeys } from '../lib/store.js';
@@ -66,8 +66,13 @@ export default function Drill({ settings, setSettings }) {
   }, [phase, q]);
 
 
+  // Let the field lose focus before it unmounts: otherwise iOS closes the keyboard without a
+  // blur and leaves fixed elements (the tab bar) sitting where the keyboard's top edge was.
+  const releaseInput = () => { if (document.activeElement === inputRef.current) inputRef.current?.blur(); };
+
   const check = () => {
     if (!typed.trim()) return;
+    releaseInput();
     const r = checkAnswer(typed, q.answer, { strictAccents: settings.strictAccents });
     setResult({ ...r, finalOk: r.ok });
     setPhase('feedback');
@@ -92,6 +97,7 @@ export default function Drill({ settings, setSettings }) {
   };
 
   const skip = () => {
+    releaseInput();
     setResult({ ok: false, accentOnly: false, finalOk: false, skipped: true });
     setPhase('feedback');
   };
@@ -218,7 +224,7 @@ export default function Drill({ settings, setSettings }) {
       <div className="drill-bar-wrap" role="progressbar" aria-valuemin={0} aria-valuemax={total || undefined} aria-valuenow={n}>
         {total > 0 && <div className="drill-fill" style={{ width: `${(n / total) * 100}%` }} />}
         <div className="drill-bar">
-          <a href="#/setup" className="muted drill-quit">← Quit</a>
+          <a href="#/setup" className="muted drill-quit" onClick={releaseInput}>← Quit</a>
           {total === 0 && (
             <div className="drill-beads" aria-hidden="true">
               {trail.map((ok, i) => <span key={i} className={ok ? 'ok' : 'bad'} />)}
@@ -232,7 +238,7 @@ export default function Drill({ settings, setSettings }) {
         <div className="tags">
           <span className="strong">{tense.label}</span>
           {!isMobile && <span>{tense.mood}</span>}
-          {settings.showHints && <span>{verbTypeLabel(q.verb)}</span>}
+          {settings.showHints && verbTypeTags(q.verb).map((t) => <span key={t}>{t}</span>)}
           {q.due && <span className="tag-review">Review</span>}
           {q.isNew && <span className="tag-new">New</span>}
         </div>
