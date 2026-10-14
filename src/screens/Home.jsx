@@ -42,7 +42,7 @@ export default function Home({ settings, setSettings }) {
     setSettings({ ...settings, mode: 'mistakes', length: mistakes > 50 ? 50 : 0 });
     go('drill');
   };
-  const startFirst = () => startOneOffDrill({ mode: 'custom', verbs: [], tenses: ['presente'], tier: 25, length: 10 });
+  const startFirst = () => startOneOffDrill({ mode: 'custom' }); // the app defaults, as set up on Practice
 
   // What the dino says.
   const dayWord = `day ${days}`;
@@ -87,7 +87,7 @@ export default function Home({ settings, setSettings }) {
       <div className="cards">
         {isNew ? (
           <Card primary eyebrow="Start here" title="Your first drill" cta="Start →" onClick={startFirst}>
-            Presente · top 25 verbs · 10 questions.
+            {settings.tenses.map(tenseLabel).join(', ')} · {settings.verbs.length ? `${settings.verbs.length} specific verbs` : settings.tier ? `top ${settings.tier} verbs` : 'all verbs'} · {settings.length ? `${settings.length} questions` : 'endless'}.
           </Card>
         ) : (
           <Card
