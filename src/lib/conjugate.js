@@ -39,8 +39,17 @@ function changeStem(stem, from, to) {
   return stem.slice(0, i) + to + stem.slice(i + from.length);
 }
 
+/** construir, incluir… (but not seguir / distinguir, where the u is silent). */
+function isUir(verb) {
+  return verb.inf.endsWith('uir') && !verb.inf.endsWith('guir') && !verb.inf.endsWith('quir');
+}
+/** leer, creer, caer, poseer: a vowel before the -er. */
+function isVowelEr(verb) {
+  return /[aeo]er$/.test(verb.inf);
+}
+
 function stripAccents(s) {
-  return s.normalize('NFD').replace(/[̀-ͯ]/g, '');
+  return s.normalize('NFD').replace(/\u0301/g, '').normalize('NFC'); // only the acute accent: ñ keeps its tilde
 }
 
 /** Pretérito yo spelling for -car / -gar / -zar verbs. */
@@ -81,7 +90,8 @@ export function conjugate(verb, tense) {
 
   if (tense === 'presente') {
     const [from, to] = verb.stem ? verb.stem.split('>') : [null, null];
-    const changed = verb.stem ? changeStem(stem, from, to) : stem;
+    let changed = verb.stem ? changeStem(stem, from, to) : stem;
+    if (isUir(verb)) changed = stem + 'y'; // construir → construyo, construyes… (not nosotros / vosotros)
     return ENDINGS.presente[g].map((e, i) => {
       if (i === 0 && verb.yo) return verb.yo;
       const s = STEM_PERSONS.includes(i) ? changed : stem;
@@ -94,6 +104,13 @@ export function conjugate(verb, tense) {
     const st = verb.pretStem;
     const endings = ['e', 'iste', 'o', 'imos', 'isteis', st.endsWith('j') ? 'eron' : 'ieron'];
     return endings.map((e, i) => verb.pretFix?.[i] ?? st + e);
+  }
+
+  if (tense === 'preterito' && (isUir(verb) || isVowelEr(verb))) {
+    // Unstressed i between vowels becomes y (construyó, leyó); the other forms keep í.
+    const forms = ['í', 'íste', 'yó', 'ímos', 'ísteis', 'yeron'].map((e) => stem + e);
+    if (isUir(verb)) { forms[1] = stem + 'iste'; forms[3] = stem + 'imos'; forms[4] = stem + 'isteis'; } // construí, construiste, construyó, construimos…
+    return forms;
   }
 
   if (tense === 'preterito') {
@@ -175,6 +192,21 @@ export function checkAnswer(typed, correct, { strictAccents = true } = {}) {
 
 /** One-line rule note shown on a miss. Keep these short and pattern-level. */
 export function ruleNote(verb, tense, personIdx) {
+  if (tense === 'presente' && verb.stem && /[íú]$/.test(verb.stem)) {
+    return STEM_PERSONS.includes(personIdx)
+      ? `Accent shift ${verb.stem.replace('>', '→')} in the "boot" (yo, tú, él, ellos): the weak vowel takes the stress (envío, continúo).`
+      : 'Nosotros and vosotros keep the unstressed vowel; the written accent only appears in yo, tú, él, ellos.';
+  }
+  if (tense === 'presente' && isUir(verb)) {
+    return STEM_PERSONS.includes(personIdx)
+      ? '-uir verbs add a y before the ending in yo, tú, él, ellos (construyo, construyes).'
+      : 'Nosotros and vosotros of -uir verbs have no y (construimos, construís).';
+  }
+  if (tense === 'preterito' && (isUir(verb) || isVowelEr(verb))) {
+    return [2, 5].includes(personIdx)
+      ? 'An unstressed i between two vowels becomes y: -ió → -yó, -ieron → -yeron (leyó, construyeron).'
+      : isVowelEr(verb) ? 'The i carries a written accent to split the vowels: leí, leíste, leímos, leísteis.' : 'Regular -ir endings here; the y only appears in él and ellos.';
+  }
   if (tense === 'presente' && verb.stem) {
     if (STEM_PERSONS.includes(personIdx)) {
       return `Stem change ${verb.stem.replace('>', '→')} in the "boot" (yo, tú, él, ellos); nosotros and vosotros keep the original stem.`;

@@ -38,7 +38,7 @@ waiting: forms due for review, or mistakes to retry. Six cards: Review due · Mi
 Verbs · Progress · Coming soon. A first-time visitor gets a welcome and a "Your first drill" card instead.
 
 **Practice.** Three modes:
-- *Custom*: pick tenses, a frequency tier (Top 25 / Top 50 / all 71), verb groups or specific verbs,
+- *Custom*: pick tenses, a frequency tier (Top 25 / 50 / 100 / all 200), verb groups or specific verbs,
   persons, and a length (10 / 20 / 50 / ∞). Options (prompt language ES / EN / Both, strict accents,
   prioritise due reviews, verb-type hint) collapse to one line.
 - *Due reviews*: only the forms spaced repetition says you're about to forget.
@@ -49,7 +49,7 @@ letters highlighted, a one-line rule, your history with that exact form, and a l
 context. The header fills left to right as you go; in ∞ mode each answer adds a green or red square
 instead. No same verb twice in a row. Enter checks and advances, Esc skips, accent bar under the input.
 
-**Verbs.** 71 verbs ranked by corpus frequency. Full table (one tense at a time on phones), irregular
+**Verbs.** 200 verbs ranked by corpus frequency. Full table (one tense at a time on phones), irregular
 parts highlighted. Click any form for an example sentence (ES + EN), why that tense fits, trigger
 words, verb-specific notes (ser/ir share a pretérito, saber = "found out" in the pretérito…), and
 the same verb + person in every other tense with contrast explainers. Each verb carries a level
