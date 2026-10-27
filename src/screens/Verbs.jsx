@@ -237,7 +237,7 @@ export default function Verbs({ inf: param, settings, setSettings }) {
             <div className="muted verb-stats">
               {stats.n ? (
                 <>
-                  <div><span className={`level-dot level-${lvl.level}`} />{LEVELS.find((l) => l.id === lvl.level).label} · {lvl.known}/{lvl.total} forms known · {stats.n} answered · {Math.round(stats.accuracy * 100)}% right</div>
+                  <div><span className={`level-dot level-${lvl.level}`} />{LEVELS.find((l) => l.id === lvl.level).label} · {lvl.mastered} of {lvl.seen} practised {lvl.seen === 1 ? 'form' : 'forms'} mastered · {Math.round(stats.accuracy * 100)}% right</div>
                   {stats.weakest && (
                     <div>Weakest: {PERSONS[stats.weakest.personIdx]} · {TENSES.find((t) => t.id === stats.weakest.tense)?.label} ({Math.round(stats.weakest.acc * 100)}%)</div>
                   )}

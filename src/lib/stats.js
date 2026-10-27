@@ -4,6 +4,9 @@ import { loadLog, loadSrs, parseKey } from './store.js';
 
 const DAY = 24 * 60 * 60 * 1000;
 
+/** A form is mastered once it has been answered right on 3 spaced reviews in a row (now, +1 day, +4 days). */
+export const MASTERED_REPS = 3;
+
 /** Period → epoch ms. `days` may be a number, 'today', or 'all'. */
 export function sinceFor(days) {
   if (days === 'all') return 0;
@@ -17,10 +20,11 @@ export function summary(days = 30) {
   const answered = log.length;
   const correct = log.reduce((a, e) => a + e.ok, 0);
   const srs = loadSrs();
-  const entries = Object.values(srs);
-  const known = entries.filter((e) => e.hist.length && e.hist[e.hist.length - 1] === 1).length; // right last time
-  const mastered = entries.filter((e) => e.reps >= 3).length; // right on 3 spaced reviews in a row
-  return { answered, correct, accuracy: answered ? correct / answered : 0, known, mastered, tracked: entries.length };
+  // Forms practised in this period, and how many of those are mastered today.
+  const practised = [...new Set(log.map((e) => e.key))];
+  const isMastered = (k) => (srs[k]?.reps ?? 0) >= MASTERED_REPS;
+  const mastered = practised.filter(isMastered).length;
+  return { answered, correct, accuracy: answered ? correct / answered : 0, mastered, practised: practised.length };
 }
 
 export function todayStats() {
@@ -136,16 +140,26 @@ export const LEVELS = [
  *  learning – everything in between
  *  strong   – ≥ 85% right last time and at least half the forms seen
  */
+/**
+ * Level of one verb, judged only on the forms actually practised:
+ *  unseen   nothing practised yet
+ *  weak     fewer than half of its practised forms were right last time
+ *  strong   at least 6 forms practised and 70%+ of them mastered
+ *  learning everything in between
+ */
+export const STRONG_MIN_FORMS = 6;
+export const STRONG_MASTERED_SHARE = 0.7;
 export function verbLevel(inf, srs = loadSrs()) {
-  const total = 30;
   let seen = 0, known = 0, mastered = 0;
   for (const [k, e] of Object.entries(srs)) {
     if (parseKey(k).inf !== inf) continue;
     seen += 1;
     if (e.hist.length && e.hist[e.hist.length - 1] === 1) known += 1;
-    if (e.reps >= 3) mastered += 1;
+    if (e.reps >= MASTERED_REPS) mastered += 1;
   }
-  const ratio = seen ? known / seen : 0;
-  const level = !seen ? 'unseen' : ratio >= 0.85 && seen >= total / 2 ? 'strong' : ratio < 0.5 ? 'weak' : 'learning';
-  return { level, seen, known, mastered, total };
+  const level = !seen ? 'unseen'
+    : known / seen < 0.5 ? 'weak'
+    : seen >= STRONG_MIN_FORMS && mastered / seen >= STRONG_MASTERED_SHARE ? 'strong'
+    : 'learning';
+  return { level, seen, known, mastered };
 }
