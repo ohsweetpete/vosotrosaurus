@@ -5,6 +5,7 @@ import { makeDrawer, poolSize } from '../lib/questions.js';
 import { recordAnswer, dueKeys } from '../lib/store.js';
 import { formHistory } from '../lib/stats.js';
 import { go, startOneOffDrill, useIsMobile } from '../App.jsx';
+import { VerbPrompt, SentencePrompt, SentenceFilled } from '../components/Prompt.jsx';
 
 const ACCENTS = ['á', 'é', 'í', 'ó', 'ú', 'ñ', 'ü'];
 
@@ -148,14 +149,6 @@ export default function Drill({ settings, setSettings }) {
 
   const setPrompt = (promptLang) => setSettings({ ...settings, promptLang });
 
-  const prompt = (big) => {
-    const es = <div className={big ? 'verb-big' : 'verb-en'}>{q.verb.inf}</div>;
-    const en = <div className={big ? 'verb-en big' : 'verb-en'}>{q.verb.en}</div>;
-    if (settings.promptLang === 'en') return <>{en}{phase === 'feedback' && es}</>;
-    if (settings.promptLang === 'both') return <>{es}{en}</>;
-    return <>{es}{phase === 'feedback' && en}</>;
-  };
-
   const langSeg = (
     <div className="seg drill-lang" role="group" aria-label="Prompt language">
       {[['es', 'ES'], ['en', 'EN'], ['both', 'Both']].map(([id, label]) => (
@@ -245,14 +238,17 @@ export default function Drill({ settings, setSettings }) {
 
         {phase === 'ask' && (
           <>
-            <div>{prompt(true)}</div>
+            {q.sentence
+              ? <SentencePrompt sentence={q.sentence} verb={q.verb} promptLang={settings.promptLang} />
+              : <VerbPrompt verb={q.verb} promptLang={settings.promptLang} />}
 
             <div className="answer-row">
-              <label htmlFor="answer" className="pronoun">{person}</label>
+              {!q.sentence && <label htmlFor="answer" className="pronoun">{person}</label>}
               <input
                 id="answer"
                 ref={inputRef}
                 className="answer-input"
+                aria-label={q.sentence ? 'Missing verb' : undefined}
                 type="text"
                 autoComplete="off"
                 autoCapitalize="off"
@@ -290,6 +286,14 @@ export default function Drill({ settings, setSettings }) {
         {phase === 'feedback' && (
           <div className="feedback">
             <div className="stack-lg">
+              {q.sentence ? (
+                <div className="fb-head fb-sentence">
+                  <SentenceFilled sentence={q.sentence}>
+                    <Form verb={q.verb} tense={q.tense} idx={q.personIdx} forms={q.forms} />
+                  </SentenceFilled>
+                  <div className="muted sm">{q.verb.inf} · {person} · {q.verb.en}</div>
+                </div>
+              ) : (
               <div className="fb-head">
                 <div className="verb-big fb-verb">
                   {q.verb.inf}{!isMobile && <span className="pronoun fb-person"> · {person}</span>}
@@ -297,6 +301,7 @@ export default function Drill({ settings, setSettings }) {
                 {isMobile && <div className="pronoun fb-pronoun">{person}</div>}
                 <div className="verb-en">{q.verb.en}</div>
               </div>
+              )}
 
               <div className={`verdict ${result.finalOk ? 'ok' : 'bad'}`}>
                 <div className="eyebrow verdict-label">

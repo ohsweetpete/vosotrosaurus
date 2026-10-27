@@ -18,7 +18,8 @@ With npm available (dev loop with hot reload):
 ```bash
 npm install
 npm run dev       # http://localhost:5173
-npm run check     # engine spot checks (plain node, no deps)
+npm run check     # engine + sentence checks (plain node, no deps)
+npm run sentences # print every gap sentence for a read-through
 npm run build     # dist/ + regenerates Vosotrosaurus.html, docs/index.html, VosotrosaurusNew.html
 ```
 
@@ -37,10 +38,13 @@ The build also writes `docs/index.html`. In the GitHub repo: Settings → Pages 
 waiting: forms due for review, or mistakes to retry. Six cards: Review due · Mistakes · Practice ·
 Verbs · Progress · Coming soon. A first-time visitor gets a welcome and a "Your first drill" card instead.
 
-**Practice.** Three modes:
+**Practice.** Four modes:
 - *Custom*: pick tenses, a frequency tier (Top 25 / 50 / 100 / all 200), verb groups or specific verbs,
   persons, and a length (10 / 20 / 50 / ∞). Options (prompt language ES / EN / Both, strict accents,
-  prioritise due reviews, verb-type hint) collapse to one line.
+  prioritize due reviews, verb-type hint) collapse to one line.
+- *Sentences*: the same pickers as Custom, but each question is a sentence with the verb missing
+  ("Ayer, nosotros ____ (cenar) con la familia."). The subject rotates (él / ella / usted…) and a few
+  verbs that only take a thing as subject (costar, doler, haber…) are left out.
 - *Due reviews*: only the forms spaced repetition says you're about to forget.
 - *Mistakes*: only the forms you got wrong last time.
 

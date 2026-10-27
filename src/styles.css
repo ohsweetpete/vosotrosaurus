@@ -207,6 +207,17 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--accent); }
 .verb-en { font-size: 18px; color: var(--muted); margin-top: 8px; }
 .verb-en.big { font-size: 40px; color: var(--ink); font-weight: 600; letter-spacing: -0.02em; }
 .answer-row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; justify-content: center; }
+/* sentence prompts (Sentences mode) */
+.gap { max-width: 760px; display: flex; flex-direction: column; gap: 10px; }
+.gap p { margin: 0; }
+.gap-sentence { font-size: 30px; line-height: 1.45; font-weight: 500; letter-spacing: -0.01em; }
+.gap-blank { display: inline-block; width: 4.2em; height: 0.9em; vertical-align: baseline; border-bottom: 3px solid var(--ink); }
+.gap-hint { color: var(--accent); font-family: var(--mono); font-size: 0.7em; font-weight: 500; }
+.gap-fill { font-weight: 700; border-bottom: 3px solid var(--good); }
+.gap-en { font-size: 17px; color: var(--muted); line-height: 1.4; }
+.fb-sentence { display: flex; flex-direction: column; gap: 6px; }
+.fb-sentence .gap-sentence { font-size: 26px; }
+.mode-hint { margin-top: 10px; }
 .pronoun { font-family: var(--mono); font-size: 32px; font-weight: 500; color: var(--accent); }
 .answer-input {
   font-family: var(--sans); font-size: 32px; padding: 8px 16px; width: min(420px, 90vw);
@@ -510,6 +521,10 @@ button.select-opt { width: 100%; border: none; background: none; font: inherit; 
   .verb-en { font-size: 17px; }
   .answer-row { flex-direction: column; gap: 10px; width: 100%; }
   .pronoun { font-size: 26px; }
+  .gap-sentence { font-size: 22px; }
+  .fb-sentence .gap-sentence { font-size: 21px; }
+  .gap-en { font-size: 15px; }
+  .feedback .fb-sentence { text-align: center; }
   .answer-input { width: 100%; font-size: 26px; }
   .accents { width: 100%; gap: 6px; flex-wrap: nowrap; }
   .accents button { flex: 1; width: auto; height: 46px; min-width: 0; font-size: 20px; }

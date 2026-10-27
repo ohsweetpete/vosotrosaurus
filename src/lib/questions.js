@@ -3,6 +3,13 @@
 import { VERBS, VERB_BY_INF, verbGroups } from '../data/verbs.js';
 import { conjugate } from './conjugate.js';
 import { formKey, parseKey, loadSrs, dueKeys, mistakeKeys } from './store.js';
+import { gapSentence, sentenceOk } from './sentences.js';
+
+/** Modes that use the tense / verb / person pickers (the others draw from a fixed list). */
+export const PICKER_MODES = ['custom', 'gap'];
+/** Modes whose prompt is a sentence with a gap; value is the sentenceOk() mode. */
+const SENTENCE_MODES = { gap: 'gap' };
+const isListMode = (mode) => mode === 'due' || mode === 'mistakes';
 
 export function matchingVerbs(settings) {
   if (settings.verbs && settings.verbs.length) {
@@ -24,8 +31,12 @@ function frequencyWeight(verb, verbs) {
 export function poolKeys(settings, now = Date.now()) {
   if (settings.mode === 'due') return dueKeys(now);
   if (settings.mode === 'mistakes') return mistakeKeys();
+  const sm = SENTENCE_MODES[settings.mode];
   const out = [];
-  for (const v of matchingVerbs(settings)) for (const t of settings.tenses) for (const p of settings.persons) out.push(formKey(v.inf, t, p));
+  for (const v of matchingVerbs(settings)) for (const t of settings.tenses) {
+    if (sm && !sentenceOk(sm, v.inf, t)) continue; // e.g. "tú cuestas" makes no sentence
+    for (const p of settings.persons) out.push(formKey(v.inf, t, p));
+  }
   return out;
 }
 
@@ -45,9 +56,9 @@ export function makeQuestion(inf, tense, personIdx) {
  */
 export function makeDrawer(settings) {
   const allowed = new Set(poolKeys(settings));
-  const verbs = settings.mode === 'custom' || !settings.mode
-    ? matchingVerbs(settings)
-    : VERBS.filter((v) => [...allowed].some((k) => parseKey(k).inf === v.inf));
+  const verbs = isListMode(settings.mode)
+    ? VERBS.filter((v) => [...allowed].some((k) => parseKey(k).inf === v.inf))
+    : matchingVerbs(settings);
 
   const recent = [];
   const remember = (k) => {
@@ -68,7 +79,7 @@ export function makeDrawer(settings) {
   };
   // Don't ask the same verb twice in a row (unless the pool is a specific verb list,
   // or only one verb matches). Falls back to the unfiltered list if it would empty it.
-  const specific = !!(settings.verbs && settings.verbs.length) || (settings.mode && settings.mode !== 'custom');
+  const specific = !!(settings.verbs && settings.verbs.length) || isListMode(settings.mode);
   let lastInf = null;
   let lastSlot = null; // `${tense}|${personIdx}` of the previous question
   // Never the same tense + person twice running: the ending would just be copied from
@@ -129,6 +140,9 @@ export function makeDrawer(settings) {
     lastInf = inf;
     lastSlot = `${tense}|${personIdx}`;
     const e = srs[k];
-    return { ...makeQuestion(inf, tense, personIdx), due: !!(e && e.due <= now), isNew: !e };
+    const q = { ...makeQuestion(inf, tense, personIdx), due: !!(e && e.due <= now), isNew: !e };
+    // Fresh seed per appearance: the same form comes back in a different sentence.
+    if (SENTENCE_MODES[settings.mode]) q.sentence = gapSentence(q.verb, tense, personIdx, { seed: `${k}|${now}|${Math.random()}` });
+    return q;
   };
 }

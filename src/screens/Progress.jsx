@@ -101,7 +101,7 @@ export default function Progress() {
       <div className="stat-strip">
         <div className="stat-tile"><span className="eyebrow">Answered</span><span className="stat-value">{s.answered.toLocaleString()}</span></div>
         <div className="stat-tile"><span className="eyebrow">Accuracy</span><span className="stat-value">{s.answered ? `${Math.round(s.accuracy * 100)}%` : '–'}</span></div>
-        <div className="stat-tile" title="A form (one verb, tense and person) is mastered after 3 right answers in a row, spaced a day and then 4 days apart."><span className="eyebrow">Forms mastered</span><span className="stat-value">{s.mastered}<small>of {s.practised} practised</small></span></div>
+        <div className="stat-tile" title="A form (one verb, tense and person) is mastered after 3 right answers in a row, spaced a day and then 4 days apart."><span className="eyebrow">Forms mastered</span><span className="stat-value">{s.mastered}<small>of {s.practised} practiced</small></span></div>
       </div>
 
       <div className="muted prog-legend">

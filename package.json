@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build && node scripts/singlefile.mjs",
     "preview": "vite preview",
-    "check": "node scripts/check-engine.mjs"
+    "check": "node scripts/check-engine.mjs && node scripts/check-sentences.mjs",
+    "sentences": "node scripts/dump-sentences.mjs"
   },
   "dependencies": {
     "react": "^18.3.1",

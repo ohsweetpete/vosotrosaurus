@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { TENSES, GROUPS, PERSONS, VERBS, TIERS } from '../data/verbs.js';
-import { poolSize, matchingVerbs } from '../lib/questions.js';
+import { poolSize, matchingVerbs, PICKER_MODES } from '../lib/questions.js';
 import { dueKeys, mistakeKeys, loadDrillDefaults, saveDrillDefaults, drillDefaults, sameDrillSettings } from '../lib/store.js';
 import { go, useIsMobile } from '../App.jsx';
 
@@ -28,6 +28,7 @@ const PERSON_SHORT = ['yo', 'tú', 'él/ella/Ud.', 'nosotros', 'vosotros', 'ello
 
 const MODES = [
   { id: 'custom', label: 'Custom' },
+  { id: 'gap', label: 'Sentences', hint: 'Each question is a sentence with the verb missing. Type the form that fits.' },
   { id: 'due', label: 'Due reviews' },
   { id: 'mistakes', label: 'Mistakes' },
 ];
@@ -108,14 +109,17 @@ export default function Setup({ settings, setSettings }) {
     () => ({ nVerbs: matchingVerbs(settings).length, pool: poolSize(settings) }),
     [settings.mode, settings.tier, settings.groups, settings.verbs, settings.tenses, settings.persons], // eslint-disable-line react-hooks/exhaustive-deps
   );
-  const canStart = mode === 'custom'
-    ? settings.tenses.length > 0 && settings.persons.length > 0 && nVerbs > 0
+  const pickers = PICKER_MODES.includes(mode);
+  const canStart = pickers
+    ? settings.tenses.length > 0 && settings.persons.length > 0 && nVerbs > 0 && pool > 0
     : pool > 0;
   const capped = settings.length > 0 && pool > 0 && pool < settings.length;
 
   const note = !canStart
-    ? mode === 'custom'
-      ? 'Pick at least one tense, one person and one verb group.'
+    ? pickers
+      ? (mode === 'gap' && settings.tenses.length > 0 && settings.persons.length > 0 && nVerbs > 0
+        ? 'These verbs don\'t make natural sentences (haber, costar, doler…). Pick some others.'
+        : 'Pick at least one tense, one person and one verb group.')
       : mode === 'due' ? 'Nothing is due for review right now.' : 'No outstanding mistakes. Nice.'
     : capped
       ? `Only ${pool} forms match, so this drill will be ${pool} questions.`
@@ -177,9 +181,10 @@ export default function Setup({ settings, setSettings }) {
               );
             })}
           </div>
+          {MODES.find((m) => m.id === mode)?.hint && <div className="muted sm mode-hint">{MODES.find((m) => m.id === mode).hint}</div>}
         </section>
 
-        {mode === 'custom' ? (
+        {pickers ? (
           <>
             <section className="box">
               <Label>Tenses</Label>
@@ -246,8 +251,8 @@ export default function Setup({ settings, setSettings }) {
                 <OptionRow label="Strict accents" hint="habló ≠ hablo">
                   <input type="checkbox" checked={settings.strictAccents} onChange={(e) => set({ strictAccents: e.target.checked })} aria-label="Strict accents" />
                 </OptionRow>
-                <OptionRow label="Prioritise forms due for review">
-                  <input type="checkbox" checked={settings.prioritiseDue} onChange={(e) => set({ prioritiseDue: e.target.checked })} aria-label="Prioritise forms due for review" />
+                <OptionRow label="Prioritize forms due for review">
+                  <input type="checkbox" checked={settings.prioritiseDue} onChange={(e) => set({ prioritiseDue: e.target.checked })} aria-label="Prioritize forms due for review" />
                 </OptionRow>
                 <OptionRow label="Show verb-type hint" hint="stem-changer, irregular…">
                   <input type="checkbox" checked={settings.showHints} onChange={(e) => set({ showHints: e.target.checked })} aria-label="Show verb-type hint" />
@@ -257,7 +262,7 @@ export default function Setup({ settings, setSettings }) {
               <div className="options-row">
                 <label className="option-inline"><span>Show the verb as</span>{promptSeg}</label>
                 <label className="option-inline"><input type="checkbox" checked={settings.strictAccents} onChange={(e) => set({ strictAccents: e.target.checked })} /><span>Strict accents</span></label>
-                <label className="option-inline"><input type="checkbox" checked={settings.prioritiseDue} onChange={(e) => set({ prioritiseDue: e.target.checked })} /><span>Prioritise due reviews</span></label>
+                <label className="option-inline"><input type="checkbox" checked={settings.prioritiseDue} onChange={(e) => set({ prioritiseDue: e.target.checked })} /><span>Prioritize due reviews</span></label>
                 <label className="option-inline"><input type="checkbox" checked={settings.showHints} onChange={(e) => set({ showHints: e.target.checked })} /><span>Show verb-type hint</span></label>
               </div>
             )

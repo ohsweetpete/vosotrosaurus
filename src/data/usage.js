@@ -7,6 +7,9 @@
 //                verb forms, so one natural sentence can be generated for every
 //                verb × tense × person without hand-writing 2,000 sentences.
 //
+// esPl: complement for plural persons when it has to agree (muy feliz / muy felices).
+// {poss} in en: replaced by the subject's possessive (my / your / his…).
+// enPret: English for the pretérito when the meaning shifts (supe = found out, conocí = met).
 // English verb forms: enV = [base, thirdPersonSingular, past]. Verbs whose
 // English present or past varies by person (be, have) use the object form.
 
@@ -84,12 +87,12 @@ export const VERB_CTX = {
   haber: { es: 'terminado el trabajo', en: 'finished the work', enV: HAVE, enImp: 'had', enFut: 'will have', enCond: 'would have', note: 'Haber is almost always an auxiliary: its forms combine with a participle (he comido, había salido). On its own it only appears as "hay / había / hubo" (there is / there was).' },
   tener: { es: 'mucho trabajo', en: 'a lot of work', enV: HAVE },
   hacer: { es: 'la tarea', en: 'the homework', enV: ['do', 'does', 'did'] },
-  poder: { es: 'ayudar', en: 'help', enV: { pres: ['can', 'can', 'can', 'can', 'can', 'can'], past: 'could', base: 'be able to' }, enImp: 'could', enFut: 'will be able to', enCond: 'could' },
+  poder: { es: 'ayudar', en: 'help', enV: { pres: ['can', 'can', 'can', 'can', 'can', 'can'], past: 'could', base: 'be able to' }, enPret: 'managed to', enImp: 'could', enFut: 'will be able to', enCond: 'could' },
   decir: { es: 'la verdad', en: 'the truth', enV: ['tell', 'tells', 'told'] },
   ir: { es: 'al mercado', en: 'to the market', enV: ['go', 'goes', 'went'] },
   ver: { es: 'la tele', en: 'TV', enV: ['watch', 'watches', 'watched'] },
   dar: { es: 'las gracias', en: 'thanks', enV: ['give', 'gives', 'gave'] },
-  saber: { es: 'la respuesta', en: 'the answer', enV: ['know', 'knows', 'knew'] },
+  saber: { es: 'la respuesta', en: 'the answer', enV: ['know', 'knows', 'knew'], enPret: 'found out' },
   querer: { es: 'más café', en: 'more coffee', enV: ['want', 'wants', 'wanted'] },
   llegar: { es: 'tarde', en: 'late', enV: ['arrive', 'arrives', 'arrived'] },
   pasar: { es: 'tiempo en casa', en: 'time at home', enV: ['spend', 'spends', 'spent'] },
@@ -108,7 +111,7 @@ export const VERB_CTX = {
   salir: { es: 'con los amigos', en: 'with friends', enV: ['go out', 'goes out', 'went out'] },
   volver: { es: 'a casa temprano', en: 'home early', enV: ['return', 'returns', 'returned'] },
   tomar: { es: 'café por la mañana', en: 'coffee in the morning', enV: ['drink', 'drinks', 'drank'] },
-  conocer: { es: 'a mucha gente', en: 'a lot of people', enV: ['know', 'knows', 'knew'] },
+  conocer: { es: 'a mucha gente', en: 'a lot of people', enV: ['know', 'knows', 'knew'], enPret: 'met' },
   vivir: { es: 'en Toronto', en: 'in Toronto', enV: ['live', 'lives', 'lived'] },
   sentir: { es: 'mucha energía', en: 'a lot of energy', enV: ['feel', 'feels', 'felt'] },
   mirar: { es: 'las estrellas', en: 'the stars', enV: ['look at', 'looks at', 'looked at'] },
@@ -144,14 +147,14 @@ export const VERB_CTX = {
   dormir: { es: 'ocho horas', en: 'eight hours', enV: ['sleep', 'sleeps', 'slept'] },
   preferir: { es: 'el té', en: 'tea', enV: ['prefer', 'prefers', 'preferred'] },
   conducir: { es: 'al trabajo', en: 'to work', enV: ['drive', 'drives', 'drove'] },
-  cerrar: { es: 'la tienda a las ocho', en: 'the shop at eight', enV: ['close', 'closes', 'closed'] },
+  cerrar: { es: 'la tienda a las ocho', en: 'the store at eight', enV: ['close', 'closes', 'closed'] },
   subir: { es: 'las escaleras', en: 'the stairs', enV: ['go up', 'goes up', 'went up'] },
   aprender: { es: 'algo nuevo', en: 'something new', enV: ['learn', 'learns', 'learned'] },
   beber: { es: 'agua', en: 'water', enV: ['drink', 'drinks', 'drank'] },
   vender: { es: 'fruta en el mercado', en: 'fruit at the market', enV: ['sell', 'sells', 'sold'] },
   comprar: { es: 'pan', en: 'bread', enV: ['buy', 'buys', 'bought'] },
   // ---- ranks 72-200 ----
-  parecer: { es: 'muy contento', en: 'very happy', enV: ['seem','seems','seemed'] },
+  parecer: { es: 'muy feliz', esPl: 'muy felices', en: 'very happy', enV: ['seem','seems','seemed'] },
   gustar: { es: 'a todos', en: 'everyone', enV: ['please','pleases','pleased'] },
   existir: { es: 'de verdad', en: 'for real', enV: ['exist','exists','existed'] },
   considerar: { es: 'otras opciones', en: 'other options', enV: ['consider','considers','considered'] },
@@ -161,7 +164,7 @@ export const VERB_CTX = {
   explicar: { es: 'la regla', en: 'the rule', enV: ['explain','explains','explained'] },
   preguntar: { es: 'por el precio', en: 'about the price', enV: ['ask','asks','asked'] },
   tratar: { es: 'de ayudar', en: 'to help', enV: ['try','tries','tried'] },
-  cambiar: { es: 'de opinión', en: 'their mind', enV: ['change','changes','changed'] },
+  cambiar: { es: 'de opinión', en: '{poss} mind', enV: ['change','changes','changed'] },
   crear: { es: 'algo nuevo', en: 'something new', enV: ['create','creates','created'] },
   presentar: { es: 'el proyecto', en: 'the project', enV: ['present','presents','presented'] },
   cumplir: { es: 'la promesa', en: 'the promise', enV: ['keep','keeps','kept'] },
@@ -176,7 +179,7 @@ export const VERB_CTX = {
   conseguir: { es: 'entradas', en: 'tickets', enV: ['get','gets','got'] },
   ofrecer: { es: 'ayuda', en: 'help', enV: ['offer','offers','offered'] },
   suponer: { es: 'lo peor', en: 'the worst', enV: ['assume','assumes','assumed'] },
-  reconocer: { es: 'la voz', en: 'the voice', enV: ['recognise','recognises','recognised'] },
+  reconocer: { es: 'la voz', en: 'the voice', enV: ['recognize','recognizes','recognized'] },
   mostrar: { es: 'las fotos', en: 'the photos', enV: ['show','shows','showed'] },
   nacer: { es: 'en primavera', en: 'in spring', enV: { pres: ['am born', 'are born', 'is born', 'are born', 'are born', 'are born'], past: ['was born', 'were born', 'was born', 'were born', 'were born', 'were born'], base: 'be born' } },
   faltar: { es: 'a clase', en: 'class', enV: ['miss','misses','missed'] },
@@ -184,15 +187,15 @@ export const VERB_CTX = {
   aceptar: { es: 'la oferta', en: 'the offer', enV: ['accept','accepts','accepted'] },
   responder: { es: 'al correo', en: 'the email', enV: ['answer','answers','answered'] },
   olvidar: { es: 'la contraseña', en: 'the password', enV: ['forget','forgets','forgot'] },
-  ayudar: { es: 'a los vecinos', en: 'the neighbours', enV: ['help','helps','helped'] },
-  escuchar: { es: 'la radio', en: 'to the radio', enV: ['listen to','listens to','listened to'] },
-  'enseñar': { es: 'matemáticas', en: 'maths', enV: ['teach','teaches','taught'] },
-  elegir: { es: 'el color', en: 'the colour', enV: ['choose','chooses','chose'] },
+  ayudar: { es: 'a los vecinos', en: 'the neighbors', enV: ['help','helps','helped'] },
+  escuchar: { es: 'la radio', en: 'the radio', enV: ['listen to','listens to','listened to'] },
+  'enseñar': { es: 'matemáticas', en: 'math', enV: ['teach','teaches','taught'] },
+  elegir: { es: 'el color', en: 'the color', enV: ['choose','chooses','chose'] },
   construir: { es: 'una casa', en: 'a house', enV: ['build','builds','built'] },
   convertir: { es: 'la idea en un plan', en: 'the idea into a plan', enV: ['turn','turns','turned'] },
   obtener: { es: 'el permiso', en: 'the permit', enV: ['obtain','obtains','obtained'] },
   proponer: { es: 'un cambio', en: 'a change', enV: ['propose','proposes','proposed'] },
-  andar: { es: 'por el centro', en: 'around the centre', enV: ['walk','walks','walked'] },
+  andar: { es: 'por el centro', en: 'around downtown', enV: ['walk','walks','walked'] },
   realizar: { es: 'el plan', en: 'the plan', enV: ['carry out','carries out','carried out'] },
   resolver: { es: 'el problema', en: 'the problem', enV: ['solve','solves','solved'] },
   mover: { es: 'los muebles', en: 'the furniture', enV: ['move','moves','moved'] },
@@ -202,10 +205,10 @@ export const VERB_CTX = {
   cantar: { es: 'en la ducha', en: 'in the shower', enV: ['sing','sings','sang'] },
   cocinar: { es: 'la cena', en: 'dinner', enV: ['cook','cooks','cooked'] },
   limpiar: { es: 'la cocina', en: 'the kitchen', enV: ['clean','cleans','cleaned'] },
-  viajar: { es: 'a España', en: 'to Spain', enV: ['travel','travels','travelled'] },
+  viajar: { es: 'a España', en: 'to Spain', enV: ['travel','travels','traveled'] },
   caminar: { es: 'por la playa', en: 'along the beach', enV: ['walk','walks','walked'] },
   romper: { es: 'el vaso', en: 'the glass', enV: ['break','breaks','broke'] },
-  mentir: { es: 'sobre la edad', en: 'about their age', enV: ['lie','lies','lied'] },
+  mentir: { es: 'sobre la edad', en: 'about {poss} age', enV: ['lie','lies','lied'] },
   enviar: { es: 'la carta', en: 'the letter', enV: ['send','sends','sent'] },
   continuar: { es: 'con el curso', en: 'with the course', enV: ['continue','continues','continued'] },
   sugerir: { es: 'otra ruta', en: 'another route', enV: ['suggest','suggests','suggested'] },
@@ -215,13 +218,13 @@ export const VERB_CTX = {
   devolver: { es: 'el libro', en: 'the book', enV: ['give back','gives back','gave back'] },
   doler: { es: 'mucho', en: 'a lot', enV: ['hurt','hurts','hurt'] },
   probar: { es: 'la sopa', en: 'the soup', enV: ['taste','tastes','tasted'] },
-  descansar: { es: 'el domingo', en: 'on Sunday', enV: ['rest','rests','rested'] },
-  desayunar: { es: 'tostadas', en: 'toast', enV: ['have for breakfast','has for breakfast','had for breakfast'] },
+  descansar: { es: 'después del trabajo', en: 'after work', enV: ['rest','rests','rested'] },
+  desayunar: { es: 'tostadas', en: 'toast for breakfast', enV: ['have','has','had'] },
   cenar: { es: 'con la familia', en: 'with the family', enV: ['have dinner','has dinner','had dinner'] },
   almorzar: { es: 'a las dos', en: 'at two', enV: ['have lunch','has lunch','had lunch'] },
   despertar: { es: 'a las siete', en: 'at seven', enV: ['wake up','wakes up','woke up'] },
   sentar: { es: 'a los invitados', en: 'the guests', enV: ['seat','seats','seated'] },
-  acostar: { es: 'a los niños', en: 'the kids', enV: ['put to bed','puts to bed','put to bed'] },
+  acostar: { es: 'a los niños', en: 'the kids to bed', enV: ['put','puts','put'] },
   'reír': { es: 'con los chistes', en: 'at the jokes', enV: ['laugh','laughs','laughed'] },
   'sonreír': { es: 'en la foto', en: 'in the photo', enV: ['smile','smiles','smiled'] },
   coger: { es: 'el tren', en: 'the train', enV: ['take','takes','took'] },
@@ -234,17 +237,17 @@ export const VERB_CTX = {
   invitar: { es: 'a los amigos', en: 'friends over', enV: ['invite','invites','invited'] },
   contestar: { es: 'el teléfono', en: 'the phone', enV: ['answer','answers','answered'] },
   desear: { es: 'buena suerte', en: 'good luck', enV: ['wish','wishes','wished'] },
-  mandar: { es: 'un paquete', en: 'a parcel', enV: ['send','sends','sent'] },
+  mandar: { es: 'un paquete', en: 'a package', enV: ['send','sends','sent'] },
   prestar: { es: 'dinero', en: 'money', enV: ['lend','lends','lent'] },
-  compartir: { es: 'el piso', en: 'the flat', enV: ['share','shares','shared'] },
+  compartir: { es: 'el piso', en: 'the apartment', enV: ['share','shares','shared'] },
   discutir: { es: 'de política', en: 'about politics', enV: ['argue','argues','argued'] },
   sufrir: { es: 'por el calor', en: 'from the heat', enV: ['suffer','suffers','suffered'] },
   prometer: { es: 'volver pronto', en: 'to come back soon', enV: ['promise','promises','promised'] },
-  practicar: { es: 'el piano', en: 'the piano', enV: ['practise','practises','practised'] },
+  practicar: { es: 'el piano', en: 'the piano', enV: ['practice','practices','practiced'] },
   entregar: { es: 'el trabajo', en: 'the assignment', enV: ['hand in','hands in','handed in'] },
   apagar: { es: 'la luz', en: 'the light', enV: ['turn off','turns off','turned off'] },
   encender: { es: 'la luz', en: 'the light', enV: ['turn on','turns on','turned on'] },
-  organizar: { es: 'la fiesta', en: 'the party', enV: ['organise','organises','organised'] },
+  organizar: { es: 'la fiesta', en: 'the party', enV: ['organize','organizes','organized'] },
   cruzar: { es: 'la calle', en: 'the street', enV: ['cross','crosses','crossed'] },
   abrazar: { es: 'a los abuelos', en: 'the grandparents', enV: ['hug','hugs','hugged'] },
   'soñar': { es: 'con el mar', en: 'about the sea', enV: ['dream','dreams','dreamed'] },
@@ -271,7 +274,7 @@ export const VERB_CTX = {
   actuar: { es: 'con calma', en: 'calmly', enV: ['act','acts','acted'] },
   bailar: { es: 'salsa', en: 'salsa', enV: ['dance','dances','danced'] },
   nadar: { es: 'en el mar', en: 'in the sea', enV: ['swim','swims','swam'] },
-  llorar: { es: 'con esa película', en: 'at that film', enV: ['cry','cries','cried'] },
+  llorar: { es: 'con esa película', en: 'at that movie', enV: ['cry','cries','cried'] },
   aprovechar: { es: 'el buen tiempo', en: 'the good weather', enV: ['make the most of','makes the most of','made the most of'] },
   advertir: { es: 'del peligro', en: 'of the danger', enV: ['warn','warns','warned'] },
   divertir: { es: 'a los niños', en: 'the kids', enV: ['amuse','amuses','amused'] },
@@ -292,4 +295,68 @@ export const SPECIAL_NOTES = {
   'poder|preterito': 'In the pretérito, poder means "managed to" (pude = I managed to); "no pude" = I failed to / couldn\'t (that time).',
   'tener|preterito': 'In the pretérito, tener can mean "got / received": "tuve una idea" = I had (got) an idea.',
   'haber|presente': 'Used as the auxiliary of the pretérito perfecto: "he terminado" = I have finished. "Hay" (there is / there are) is the impersonal form.',
+};
+
+// ---------- sentence modes (Sentences, Contrast) ----------
+//
+// CUE_BANK: person-neutral time cues per tense for the gap sentences.
+//   pos: where the cue goes. 'front' → "Ayer, nosotros ____ …"; 'back' → "Nosotros ____ … ayer.";
+//        'either' → picked per question.
+//   state: true on cues that read naturally with state verbs (STATE_VERBS: saber, vivir, ser…).
+//        Habit cues like "cada verano" or "a veces" make "conocía a mucha gente" sound odd.
+//   contrast: true on pretérito / imperfecto cues that clearly point to one of the pair,
+//        so Contrast mode only uses those.
+export const CUE_BANK = {
+  presente: [
+    { es: 'todos los días', en: 'every day', pos: 'either' },
+    { es: 'normalmente', en: 'usually', pos: 'front', state: true },
+    { es: 'a veces', en: 'sometimes', pos: 'either' },
+    { es: 'los fines de semana', en: 'on weekends', pos: 'either' },
+    { es: 'ahora', en: 'now', pos: 'front', state: true },
+  ],
+  preterito: [
+    { es: 'ayer', en: 'yesterday', pos: 'either', contrast: true, state: true },
+    { es: 'anoche', en: 'last night', pos: 'either', contrast: true, state: true },
+    { es: 'la semana pasada', en: 'last week', pos: 'either', contrast: true, state: true },
+    { es: 'el año pasado', en: 'last year', pos: 'either', contrast: true, state: true },
+    { es: 'el lunes pasado', en: 'last Monday', pos: 'either', contrast: true, state: true },
+    { es: 'una vez', en: 'once', pos: 'front', contrast: true, state: true },
+    { es: 'en 2019', en: 'in 2019', pos: 'either', contrast: true, state: true },
+  ],
+  imperfecto: [
+    { es: 'cada verano', en: 'every summer', pos: 'either', contrast: true },
+    { es: 'a menudo', en: 'often', pos: 'back', contrast: true },
+    { es: 'en aquella época', en: 'back then', pos: 'either', contrast: true, state: true },
+    { es: 'de vez en cuando', en: 'every now and then', pos: 'either', contrast: true },
+    { es: 'antes', en: 'in the past', pos: 'front', contrast: true, state: true },
+  ],
+  futuro: [
+    { es: 'mañana', en: 'tomorrow', pos: 'either', state: true },
+    { es: 'la próxima semana', en: 'next week', pos: 'either', state: true },
+    { es: 'el año que viene', en: 'next year', pos: 'either', state: true },
+    { es: 'algún día', en: 'someday', pos: 'front', state: true },
+    { es: 'pronto', en: 'soon', pos: 'back', state: true },
+  ],
+  condicional: [
+    { es: 'en ese caso', en: 'in that case', pos: 'front', state: true },
+    { es: 'con más tiempo', en: 'with more time', pos: 'either' },
+    { es: 'si fuera posible', en: 'if it were possible', pos: 'either', state: true },
+    { es: 'en otra situación', en: 'in another situation', pos: 'front', state: true },
+  ],
+};
+
+// Verbs describing a state rather than an action: sentences only use state-friendly cues.
+export const STATE_VERBS = [
+  'ser', 'estar', 'tener', 'poder', 'saber', 'querer', 'deber', 'creer', 'conocer', 'vivir',
+  'necesitar', 'preferir', 'parecer', 'existir', 'gustar', 'costar', 'valer', 'contener',
+  'poseer', 'merecer', 'caber', 'pensar',
+];
+
+// Verb (or verb|tense) combos the sentence template turns into nonsense.
+// Filled from a read-through of scripts/dump-sentences.mjs output.
+export const SENTENCE_SKIP = {
+  // Verbs whose natural subject is a thing or an event, not a person ("tú cuestas", "nosotros ocurrimos"),
+  // plus haber (auxiliary). Still drilled in the other modes.
+  gap: ['haber', 'ocurrir', 'existir', 'nacer', 'costar', 'doler', 'contener', 'valer'],
+  contrast: ['haber', 'ocurrir', 'existir', 'nacer', 'costar', 'doler', 'contener', 'valer'],
 };
