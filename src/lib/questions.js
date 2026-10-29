@@ -66,6 +66,7 @@ export function makeDrawer(settings) {
     if (recent.length > 8) recent.shift();
   };
 
+  const drillTenses = [...new Set([...allowed].map((k) => parseKey(k).tense))]; // sentences avoid cues that fit two of these
   const unseen = [...allowed].filter((k) => !loadSrs()[k]); // shrinks as forms get answered
   const verbOf = (k) => VERB_BY_INF[parseKey(k).inf];
   const pickWeighted = (keys, weightFn) => {
@@ -142,7 +143,7 @@ export function makeDrawer(settings) {
     const e = srs[k];
     const q = { ...makeQuestion(inf, tense, personIdx), due: !!(e && e.due <= now), isNew: !e };
     // Fresh seed per appearance: the same form comes back in a different sentence.
-    if (SENTENCE_MODES[settings.mode]) q.sentence = gapSentence(q.verb, tense, personIdx, { seed: `${k}|${now}|${Math.random()}` });
+    if (SENTENCE_MODES[settings.mode]) q.sentence = gapSentence(q.verb, tense, personIdx, { seed: `${k}|${now}|${Math.random()}`, tenses: drillTenses });
     return q;
   };
 }

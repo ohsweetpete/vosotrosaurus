@@ -52,6 +52,8 @@ const pick = (r, list) => list[Math.floor(r() * list.length)];
  * { before, after, es, en, cue, subject, form } for one form.
  * before + form + after = the full Spanish sentence; the UI draws the gap between them.
  * opts.seed: anything stable per question. opts.contrast: only use contrast-safe cues.
+ * opts.tenses: the tenses in the drill. The prompt doesn't show the tense, so cues that also fit
+ *   another drilled tense are avoided; if one has to be used, its other tenses come back in `accept`.
  */
 export function gapSentence(verb, tense, personIdx, opts = {}) {
   const ctx = VERB_CTX[verb.inf];
@@ -64,7 +66,10 @@ export function gapSentence(verb, tense, personIdx, opts = {}) {
     .filter((c) => !opts.contrast || c.contrast)
     .filter((c) => !timed || c.pos !== 'back')
     .filter((c) => !STATE.has(verb.inf) || c.state);
-  const cue = pick(r, narrowed.length ? narrowed : all.length ? all : CUE_BANK[tense]);
+  const base = narrowed.length ? narrowed : all.length ? all : CUE_BANK[tense];
+  const clash = (c) => (c.also ?? []).filter((t) => t !== tense && (opts.tenses ?? []).includes(t));
+  const clear = base.filter((c) => !clash(c).length);
+  const cue = pick(r, clear.length ? clear : base);
   const subject = pick(r, SUBJECTS[personIdx]);
   const front = cue.pos === 'front' || (cue.pos === 'either' && (timed || r() < 0.5));
   const form = conjugate(verb, tense)[personIdx];
@@ -83,5 +88,5 @@ export function gapSentence(verb, tense, personIdx, opts = {}) {
     after = ` ${esC} ${cue.es}.`;
     en = `${cap(subject.en)} ${enV} ${enC} ${cue.en}.`;
   }
-  return { before, after, es: before + form + after, en, cue, subject, form, front };
+  return { before, after, es: before + form + after, en, cue, subject, form, front, accept: clash(cue) };
 }

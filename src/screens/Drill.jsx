@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { PERSONS, TENSES, verbTypeTags } from '../data/verbs.js';
 import { conjugate, highlight, checkAnswer, ruleNote, stemOf } from '../lib/conjugate.js';
 import { makeDrawer, poolSize } from '../lib/questions.js';
-import { recordAnswer, dueKeys } from '../lib/store.js';
+import { recordAnswer, dueKeys, formKey } from '../lib/store.js';
 import { formHistory } from '../lib/stats.js';
 import { go, startOneOffDrill, useIsMobile } from '../App.jsx';
 import { VerbPrompt, SentencePrompt, SentenceFilled } from '../components/Prompt.jsx';
@@ -74,13 +74,23 @@ export default function Drill({ settings, setSettings }) {
   const check = () => {
     if (!typed.trim()) return;
     releaseInput();
-    const r = checkAnswer(typed, q.answer, { strictAccents: settings.strictAccents });
+    let r = checkAnswer(typed, q.answer, { strictAccents: settings.strictAccents });
+    // Sentences: when the cue also fits another drilled tense ("mañana voy" / "mañana iré"),
+    // that tense's form counts as right too.
+    if (!r.ok && q.sentence?.accept?.length) {
+      for (const alt of q.sentence.accept) {
+        const altForm = conjugate(q.verb, alt)[q.personIdx];
+        const ra = checkAnswer(typed, altForm, { strictAccents: settings.strictAccents });
+        if (ra.ok) { r = { ...ra, alt, altForm }; break; }
+      }
+    }
     setResult({ ...r, finalOk: r.ok });
     setPhase('feedback');
   };
 
   const commitAndNext = (finalOk) => {
-    recordAnswer(q.key, finalOk);
+    // An accepted other-tense answer is a right answer for THAT form, not the one asked.
+    recordAnswer(result?.alt && finalOk ? formKey(q.verb.inf, result.alt, q.personIdx) : q.key, finalOk);
     const nextN = n + 1;
     setScore((s) => ({ ok: s.ok + (finalOk ? 1 : 0), bad: s.bad + (finalOk ? 0 : 1) }));
     if (!finalOk) setMisses((m) => [...m, { verb: q.verb.inf, person, tense: tense.label, answer: q.answer, typed }]);
@@ -229,8 +239,9 @@ export default function Drill({ settings, setSettings }) {
 
       <div className="drill" ref={drillRef} tabIndex={-1}>
         <div className="tags">
-          <span className="strong">{tense.label}</span>
-          {!isMobile && <span>{tense.mood}</span>}
+          {/* Sentences: the tense is the puzzle, so it only shows once answered. */}
+          {!(q.sentence && phase === 'ask') && <span className="strong">{tense.label}</span>}
+          {!isMobile && !(q.sentence && phase === 'ask') && <span>{tense.mood}</span>}
           {settings.showHints && verbTypeTags(q.verb).map((t) => <span key={t}>{t}</span>)}
           {q.due && <span className="tag-review">Review</span>}
           {q.isNew && <span className="tag-new">New</span>}
@@ -268,6 +279,7 @@ export default function Drill({ settings, setSettings }) {
 
             {hint && (
               <div className="muted md">
+                {q.sentence && <>Tense: <strong>{tense.label}</strong> · </>}
                 Stem: <span className="mono">{stemOf(q.verb)}-</span>
                 {q.verb.stem && ` · ${q.verb.stem.replace('>', '→')}`}
                 {q.verb.yo && q.tense === 'presente' && q.personIdx === 0 && ' · irregular yo'}
@@ -305,7 +317,7 @@ export default function Drill({ settings, setSettings }) {
 
               <div className={`verdict ${result.finalOk ? 'ok' : 'bad'}`}>
                 <div className="eyebrow verdict-label">
-                  {result.skipped ? 'Skipped' : result.finalOk ? (result.accentOnly ? 'Correct (accent slip)' : 'Correct') : result.accentOnly ? 'Accent missing' : 'Not quite'}
+                  {result.skipped ? 'Skipped' : result.finalOk ? (result.alt ? 'Correct (also fits)' : result.accentOnly ? 'Correct (accent slip)' : 'Correct') : result.accentOnly ? 'Accent missing' : 'Not quite'}
                 </div>
                 <div className="pair">
                   {!result.skipped && (
@@ -321,6 +333,11 @@ export default function Drill({ settings, setSettings }) {
                     </div>
                   </div>
                 </div>
+                {result.alt && result.finalOk && (
+                  <div className="md lh">
+                    <strong>{result.altForm}</strong> is the {TENSES.find((t) => t.id === result.alt).label.toLowerCase()}, which also works with "{q.sentence.cue.es}". The sentence was written for the {tense.label.toLowerCase()}: <strong>{q.answer}</strong>.
+                  </div>
+                )}
                 <div className="md lh">{ruleNote(q.verb, q.tense, q.personIdx)}</div>
                 <div className="links">
                   <a href={`#/verbs/${q.verb.inf}/${q.tense}/${q.personIdx}`} className="btn link sm">See it in context →</a>

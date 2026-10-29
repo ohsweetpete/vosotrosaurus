@@ -11,7 +11,7 @@ for (const v of VERBS) {
   for (const t of TENSES) {
     const persons = all ? [0, 1, 2, 3, 4, 5] : [rot++ % 6];
     for (const p of persons) {
-      const s = gapSentence(v, t.id, p, { seed: `${v.inf}|${t.id}|${p}|dump` });
+      const s = gapSentence(v, t.id, p, { seed: `${v.inf}|${t.id}|${p}|dump`, tenses: TENSES.map((x) => x.id) });
       const flags = [!sentenceOk('gap', v.inf, t.id) && 'skip-gap', !sentenceOk('contrast', v.inf, t.id) && 'skip-contrast'].filter(Boolean).join(' ');
       console.log(`${t.id.padEnd(11)} ${s.es}\n${''.padEnd(11)} ${s.en}${flags ? `  [${flags}]` : ''}`);
     }

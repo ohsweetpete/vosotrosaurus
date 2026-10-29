@@ -304,15 +304,20 @@ export const SPECIAL_NOTES = {
 //        'either' → picked per question.
 //   state: true on cues that read naturally with state verbs (STATE_VERBS: saber, vivir, ser…).
 //        Habit cues like "cada verano" or "a veces" make "conocía a mucha gente" sound odd.
+//   also: other tenses that also read naturally with this cue ("mañana voy" / "mañana iré").
+//        The Sentences prompt hides the tense, so it avoids these when one of the also-tenses is in
+//        the drill, and when it can't, accepts the other tense's form as right.
 //   contrast: true on pretérito / imperfecto cues that clearly point to one of the pair,
 //        so Contrast mode only uses those.
 export const CUE_BANK = {
   presente: [
-    { es: 'todos los días', en: 'every day', pos: 'either' },
-    { es: 'normalmente', en: 'usually', pos: 'front', state: true },
-    { es: 'a veces', en: 'sometimes', pos: 'either' },
-    { es: 'los fines de semana', en: 'on weekends', pos: 'either' },
     { es: 'ahora', en: 'now', pos: 'front', state: true },
+    { es: 'hoy en día', en: 'these days', pos: 'either', state: true },
+    { es: 'actualmente', en: 'currently', pos: 'front', state: true },
+    { es: 'todos los días', en: 'every day', pos: 'either', also: ['imperfecto'] },
+    { es: 'normalmente', en: 'usually', pos: 'front', state: true, also: ['imperfecto'] },
+    { es: 'a veces', en: 'sometimes', pos: 'either', also: ['imperfecto'] },
+    { es: 'los fines de semana', en: 'on weekends', pos: 'either', also: ['imperfecto'] },
   ],
   preterito: [
     { es: 'ayer', en: 'yesterday', pos: 'either', contrast: true, state: true },
@@ -324,24 +329,27 @@ export const CUE_BANK = {
     { es: 'en 2019', en: 'in 2019', pos: 'either', contrast: true, state: true },
   ],
   imperfecto: [
-    { es: 'cada verano', en: 'every summer', pos: 'either', contrast: true },
-    { es: 'a menudo', en: 'often', pos: 'back', contrast: true },
     { es: 'en aquella época', en: 'back then', pos: 'either', contrast: true, state: true },
-    { es: 'de vez en cuando', en: 'every now and then', pos: 'either', contrast: true },
     { es: 'antes', en: 'in the past', pos: 'front', contrast: true, state: true },
+    { es: 'por aquel entonces', en: 'at that time', pos: 'either', contrast: true, state: true },
+    { es: 'en los años noventa', en: 'in the nineties', pos: 'either', contrast: true, state: true },
+    { es: 'cada verano', en: 'every summer', pos: 'either', contrast: true, also: ['presente'] },
+    { es: 'a menudo', en: 'often', pos: 'back', contrast: true, also: ['presente'] },
+    { es: 'de vez en cuando', en: 'every now and then', pos: 'either', contrast: true, also: ['presente'] },
   ],
   futuro: [
-    { es: 'mañana', en: 'tomorrow', pos: 'either', state: true },
-    { es: 'la próxima semana', en: 'next week', pos: 'either', state: true },
-    { es: 'el año que viene', en: 'next year', pos: 'either', state: true },
     { es: 'algún día', en: 'someday', pos: 'front', state: true },
-    { es: 'pronto', en: 'soon', pos: 'back', state: true },
+    { es: 'dentro de unos años', en: 'in a few years', pos: 'either', state: true },
+    { es: 'mañana', en: 'tomorrow', pos: 'either', state: true, also: ['presente'] },
+    { es: 'la próxima semana', en: 'next week', pos: 'either', state: true, also: ['presente'] },
+    { es: 'el año que viene', en: 'next year', pos: 'either', state: true, also: ['presente'] },
+    { es: 'pronto', en: 'soon', pos: 'back', state: true, also: ['presente'] },
   ],
   condicional: [
-    { es: 'en ese caso', en: 'in that case', pos: 'front', state: true },
-    { es: 'con más tiempo', en: 'with more time', pos: 'either' },
     { es: 'si fuera posible', en: 'if it were possible', pos: 'either', state: true },
+    { es: 'con más tiempo', en: 'with more time', pos: 'either' },
     { es: 'en otra situación', en: 'in another situation', pos: 'front', state: true },
+    { es: 'en ese caso', en: 'in that case', pos: 'front', state: true, also: ['futuro'] },
   ],
 };
 
